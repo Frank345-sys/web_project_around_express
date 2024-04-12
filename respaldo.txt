@@ -1,0 +1,19 @@
+"allow": "_id"
+
+/*const express = require("express");
+
+const app = express();
+
+const { PORT = 3000 } = process.env;
+
+app.listen(PORT, () => {
+  console.log(`Mi aplicación está detectando el puerto ${PORT}`);
+});
+*/
+
+warning: in the working copy of '.eslintrc', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/cards.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/users.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package-lock.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
