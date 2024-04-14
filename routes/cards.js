@@ -6,9 +6,7 @@ const fs = require("fs");
 
 const path = require("path");
 
-const filePath = path.join(__dirname, "../data/cards.json");
-
-//const fileReader = fs.createReadStream(filePath, { encoding: "utf8" });
+const filePath = path.join(__dirname, "..", "data", "cards.json");
 
 // Devolvemos todos los usuarios del archivo cards.json
 cards.get("/", (req, res) => {
@@ -18,7 +16,8 @@ cards.get("/", (req, res) => {
         error: "Error interno del servidor, no se encontro archivo cards.js",
       });
     }
-    res.send(data);
+    const allCards = JSON.parse(data);
+    res.send(allCards);
   });
 });
 

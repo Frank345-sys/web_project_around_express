@@ -6,9 +6,7 @@ const fs = require("fs");
 
 const path = require("path");
 
-const filePath = path.join(__dirname, "../data/users.json");
-
-//const fileReader = fs.createReadStream(filePath, { encoding: "utf8" });
+const filePath = path.join(__dirname, "..", "data", "users.json");
 
 // Devolvemos el usuario con el ID ingresado que coincide con el ID del archivo users.json
 users.get("/:_id", (req, res) => {
@@ -40,7 +38,8 @@ users.get("/", (req, res) => {
         error: "Error interno del servidor, no se encontro archivo users.js",
       });
     }
-    res.send(data);
+    const allUsers = JSON.parse(data);
+    res.send(allUsers);
   });
 });
 
