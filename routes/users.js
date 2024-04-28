@@ -2,15 +2,25 @@ const express = require("express");
 
 const users = express.Router();
 
-const fs = require("fs");
+const {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUserMeById,
+  updateAvatarById,
+} = require("../controllers/users");
 
-const path = require("path");
+//const fs = require("fs");
 
-const filePath = path.join(__dirname, "..", "data", "users.json");
+//const path = require("path");
+
+//const filePath = path.join(__dirname, "..", "data", "users.json");
 
 // Devolvemos el usuario con el ID ingresado que coincide con el ID del archivo users.json
-users.get("/:_id", (req, res) => {
+
+/*users.get("/:_id", (req, res) => {
   const idCard = req.params._id;
+
 
   fs.readFile(filePath, { encoding: "utf8" }, (err, data) => {
     if (err) {
@@ -24,13 +34,14 @@ users.get("/:_id", (req, res) => {
 
     if (!user) {
       return res.status(404).send({ message: "ID de usuario no encontrado" });
+    } else {
+      res.send(user);
     }
-
-    res.send(user);
   });
-});
+});*/
 
 // Devolvemos todos los usuarios del archivo users.json
+/*
 users.get("/", (req, res) => {
   fs.readFile(filePath, { encoding: "utf8" }, (err, data) => {
     if (err) {
@@ -42,5 +53,21 @@ users.get("/", (req, res) => {
     res.send(allUsers);
   });
 });
+*/
+
+// crear usuario
+users.post("/", createUser);
+
+// seleccionar todos los usuarios
+users.get("/", getUsers);
+
+// seleccionar usuario por id
+users.get("/me/:_id", getUserById);
+
+// actualizar name y about del usuario
+users.patch("/me", updateUserMeById);
+
+// actualizar solo el avatar del ususario por id
+users.patch("/me/avatar", updateAvatarById);
 
 module.exports = users;
