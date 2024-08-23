@@ -3,12 +3,25 @@ const express = require("express");
 const cards = express.Router();
 
 const {
-  getCards,
+  getCardsMe,
+  getAllCards,
+  getCardsUser,
   createCard,
   likeByIdCard,
   dislikeByIdCard,
   deleteCardById,
 } = require("../controllers/cards");
+
+const validator = require("validator");
+
+const { celebrate, Joi } = require("celebrate");
+
+const validateURL = (value, helpers) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.error("string.uri");
+};
 
 /*
 const fs = require("fs");
@@ -54,21 +67,67 @@ cards.delete("/", (req, res) => {
   });
 });
 
-
 */
-// devuelve todas las tarjetas
-cards.get("/", getCards);
+// devuelve solo las targetas del usuario visitado
+cards.get(
+  "/user/:userId",
+  celebrate({
+    params: Joi.object().keys({
+      userId: Joi.string().hex().length(24).required(),
+    }),
+  }),
+  getCardsUser
+);
+
+// devuelve solo las targetas del usuario
+cards.get("/me", getCardsMe);
+
+// devuelve todas las tarjetas de todos los usuarios
+cards.get("/", getAllCards);
 
 // crea una nueva tarjeta
-cards.post("/", createCard);
+cards.post(
+  "/",
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().required(),
+      link: Joi.string().custom(validateURL).required(),
+    }),
+  }),
+  createCard
+);
 
 // dar like a una tarjeta
-cards.put("/:cardId/like", likeByIdCard);
+cards.put(
+  "/like/:cardId",
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().hex().length(24).required(),
+    }),
+  }),
+  likeByIdCard
+);
 
 // dar unlike a una tarjeta
-cards.delete("/:cardId/like", dislikeByIdCard);
+cards.delete(
+  "/like/:cardId",
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().hex().length(24).required(),
+    }),
+  }),
+  dislikeByIdCard
+);
 
 // elimina una tarjeta por cardId
-cards.delete("/:cardId", deleteCardById);
+cards.delete(
+  "/:cardId",
+  celebrate({
+    params: Joi.object().keys({
+      cardId: Joi.string().hex().length(24).required(),
+    }),
+  }),
+  deleteCardById
+);
 
 module.exports = cards;

@@ -3,12 +3,23 @@ const express = require("express");
 const users = express.Router();
 
 const {
+  getUser,
   getUsers,
   getUserById,
-  createUser,
   updateUserMeById,
   updateAvatarById,
 } = require("../controllers/users");
+
+const validator = require("validator");
+
+const { celebrate, Joi } = require("celebrate");
+
+const validateURL = (value, helpers) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.error("string.uri");
+};
 
 //const fs = require("fs");
 
@@ -55,19 +66,45 @@ users.get("/", (req, res) => {
 });
 */
 
-// crear usuario
-users.post("/", createUser);
-
 // seleccionar todos los usuarios
-users.get("/", getUsers);
+//users.get("/", getUsers);
 
+// seleccionar usuario
+users.get("/me", getUserById);
+/*
 // seleccionar usuario por id
-users.get("/me/:_id", getUserById);
+users.get(
+  "/me/:_id",
+  celebrate({
+    params: Joi.object().keys({
+      _id: Joi.string().hex().length(24).required(),
+    }),
+  }),
+  getUserById
+);
+*/
 
-// actualizar name y about del usuario
-users.patch("/me", updateUserMeById);
+// actualizar name y about del usuario por id
+users.patch(
+  "/me",
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().required(),
+      about: Joi.string().required(),
+    }),
+  }),
+  updateUserMeById
+);
 
 // actualizar solo el avatar del ususario por id
-users.patch("/me/avatar", updateAvatarById);
+users.patch(
+  "/me/avatar",
+  celebrate({
+    body: Joi.object().keys({
+      avatar: Joi.string().custom(validateURL).required(),
+    }),
+  }),
+  updateAvatarById
+);
 
 module.exports = users;
